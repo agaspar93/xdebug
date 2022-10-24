@@ -1,0 +1,29 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports: 
+      - "8080:80"
+    networks:
+      - internal
+    volumes:
+      - ./data/:/var/www/html
+  php:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    ports:
+      - "9003"
+    networks:
+      - internal
+    environment:
+      XDEBUG_MODE: debug
+      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
+    volumes:
+      - ./data:/var/www/html
+      - /logs/php.log:/var/log/fpm-php.www.log
+networks:
+  internal:
+    driver: bridge
