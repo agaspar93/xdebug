@@ -1,11 +1,11 @@
-version: "3"
+version: "3.7"
 services:
   nginx:
     build:
       context: .
       dockerfile: nginx/Dockerfile
-    ports: 
-      - "8080:80"
+    ports:
+      - "${NGINX_PORT}:80"
     networks:
       - internal
     volumes:
@@ -24,6 +24,19 @@ services:
     volumes:
       - ./data:/var/www/html
       - /logs/php.log:/var/log/fpm-php.www.log
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    volumes:
+      - my-db:/var/lib/mysql
 networks:
   internal:
     driver: bridge
+
+volumes:
+  my-db:
